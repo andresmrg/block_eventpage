@@ -30,12 +30,9 @@ class process_form extends moodleform {
     public function definition() {
         global $DB, $PAGE;
 
-        $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.js'), true);
+        $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.js'));
         $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.timePicker.js'));
         $PAGE->requires->css('/blocks/eventpage/js/timePicker.css');
-
-        $PAGE->requires->js(new moodle_url('/blocks/eventpage/dist/js/bootstrap-colorpicker.js'));
-        $PAGE->requires->css('/blocks/eventpage/dist/css/bootstrap-colorpicker.css');
 
         $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/locallib.js'));
 
