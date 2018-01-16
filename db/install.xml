@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/eventpage/db" VERSION="20180111" COMMENT="XMLDB file for Moodle blocks/eventpage"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_eventpage" COMMENT="Table structure for the event page records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="254" NOTNULL="true" SEQUENCE="false" COMMENT="Page event title or page event name"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Event page description"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course id of which an event page is related."/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="starttime" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Start time of a day"/>
+        <FIELD NAME="endtime" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="End time of a day"/>
+        <FIELD NAME="logopath" TYPE="char" LENGTH="150" NOTNULL="true" SEQUENCE="false" COMMENT="The path where the logo is stored."/>
+        <FIELD NAME="creatorid" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Id of the user who creates the event."/>
+        <FIELD NAME="themecolor" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Color of the theme"/>
+        <FIELD NAME="fontcolor" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Color of the font"/>
+        <FIELD NAME="linkcolor" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Color of the links"/>
+        <FIELD NAME="latitude" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Latitude of the location for Google Maps"/>
+        <FIELD NAME="longitude" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Longitude for Google Map's location"/>
+        <FIELD NAME="distance" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Distance or Zoom for Google Maps"/>
+        <FIELD NAME="street" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Description of the street for location"/>
+        <FIELD NAME="city" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="City where the event will take place"/>
+        <FIELD NAME="zipcode" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Zip code of the city where the event will take place"/>
+        <FIELD NAME="other" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Example Floor 8, Building name, Apartment 203"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time's creation for a record"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last date of this record update"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

@@ -1,0 +1,256 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file allows the user to edit a course.
+ *
+ * @package     block_eventpage
+ * @author      Andrés Ramos
+ * @copyright   2017 LMS Doctor
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+require_once('../../config.php');
+require_once($CFG->dirroot . '/lib/filelib.php');
+require_once('locallib.php');
+
+global $DB;
+
+$context = context_system::instance();
+$PAGE->set_context($context);
+$PAGE->set_url('/blocks/eventpage/process.php');
+$PAGE->set_pagelayout('print');
+
+$PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.min.js'));
+$PAGE->requires->js(new moodle_url('/blocks/eventpage/js/map.js'));
+
+$eventid = optional_param('id', 0, PARAM_INT);
+$e       = block_eventpage_get_page($eventid);
+
+$coursecontext  = context_course::instance($e->courseid);
+$contextid      = block_eventpage_get_contextid($e->courseid, $coursecontext->contextlevel);
+
+// Get moderators and speakers users.
+$moderatorid     = $DB->get_field('role', 'id', array('shortname' => 'moderator'));
+$moderatorarray  = block_eventpage_get_user_from_role($moderatorid, $contextid);
+$moderators      = block_eventpage_get_role_name_list($moderatorarray);
+
+$speakerid       = $DB->get_field('role', 'id', array('shortname' => 'speaker'));
+$speakerarray    = block_eventpage_get_user_from_role($speakerid, $contextid);
+$speakers        = block_eventpage_get_role_name_list($speakerarray);
+
+
+// Get main moderators and speakers
+$mainmoderatorid     = $DB->get_field('role', 'id', array('shortname' => 'mainmoderator'));
+$mainmoderatorarray  = block_eventpage_get_user_from_role($mainmoderatorid, $contextid);
+$mainmoderator       = block_eventpage_get_single_user($mainmoderatorarray);
+
+$mainspeakerid       = $DB->get_field('role', 'id', array('shortname' => 'mainspeaker'));
+$mainspeakerarray    = block_eventpage_get_user_from_role($mainspeakerid, $contextid);
+$mainspeaker         = block_eventpage_get_single_user($mainspeakerarray);
+
+$emptybio         = (empty($mainspeaker) && empty($mainmoderator)) ? true : false;
+$emptymap         = (empty($e->latitude) && empty($e->longitude)) ? true : false;
+
+// Get course category.
+$linkcolor = (isset($e->linkcolor)) ? array('style' => 'color:' .$e->linkcolor.';') : array();
+$categorylink = block_eventpage_get_course_category($e->courseid, $linkcolor);
+
+// Attributes of the main container.
+$containerattr = array(
+    'class' => 'container',
+    'style' => "width: 1024px; margin:auto; border: 1px solid #CCC; padding: 30px; font-size: 18px; border-radius: 15px;"
+);
+
+// Style container according to the settings.
+if (isset($e->themecolor)) {
+    $containerattr['style'] .= "background: $e->themecolor;";
+}
+
+// Style font of the event page.
+if (isset($e->fontcolor)) {
+    $containerattr['style'] .= "color: $e->fontcolor";
+}
+
+echo $OUTPUT->header();
+echo html_writer::start_tag('div', $containerattr);
+    // Header.
+    echo html_writer::start_tag('header');
+
+        echo html_writer::start_tag('div');
+            echo html_writer::tag('h1', $e->name, array('style' => 'text-align: center; padding: 20px;'));
+        echo html_writer::end_tag('div');
+
+    echo html_writer::end_tag('header');
+
+    echo html_writer::tag('br','');
+
+    // Date time and moderator list.
+    echo html_writer::start_tag('div', array('class' => 'row'));
+
+        // Left side.
+        echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
+            echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate), array('style' => ''));
+
+            if (!empty($moderators)) {
+                echo html_writer::tag('div', 'Moderator: ' . $moderators, array('style' => ''));
+            }
+
+            if (!empty($speakers)) {
+                echo html_writer::tag('div', 'Speaker: ' . $speakers, array('style' => ''));
+            }
+
+        echo html_writer::end_tag('div');
+
+
+        // Right side.
+        echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
+
+            echo html_writer::tag('div', 'Time: ' . $e->starttime . ' - ' . $e->endtime, array('style' => ''));
+            echo html_writer::tag('br','');
+            echo html_writer::tag('br','');
+        echo html_writer::end_tag('div');
+
+    echo html_writer::end_tag('div');
+
+
+    // Location and bio.
+    echo html_writer::start_tag('div', array('class' => 'row'));
+
+        // If the map is not empty, then display the map and the main speaker and moderator.
+        if (!$emptymap) {
+            echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
+                echo html_writer::tag('div', "Location: {$e->city}, {$e->street}, {$e->other}", array('style' => ''));
+
+                // Map.
+                if (!$emptybio) {
+                    $mapstyle = "width:500px; height:320px";
+                } else {
+                    $mapstyle = "width:960px; height:320px";
+                }
+                echo html_writer::tag('div', '', array('id' => 'map', 'style' => $mapstyle));
+
+                echo '<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCU6NUmBX-LrGMxZQro0J8RcU4Sl4w7D84&callback=initMap"></script>';
+                echo html_writer::tag(
+                    'script',
+                    '
+                    $(\'#page\').css(\'margin-top\', \'0px\');
+                    function initMap() {
+                        var uluru = {lat: ' . $e->latitude . ', lng: ' . $e->longitude . '};
+                        var map = new google.maps.Map(document.getElementById(\'map\'), {
+                            zoom: ' . $e->distance . ',
+                            center: uluru
+                        });
+                        var marker = new google.maps.Marker({
+                            position: uluru,
+                            map: map
+                        });
+                    }'
+                );
+            echo html_writer::end_tag('div');
+
+              // Right side.
+            echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
+
+                if (!empty($mainmoderator)) {
+                    // Moderators Bio.
+                    echo html_writer::start_tag('div', array('class' => 'row'));
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            echo $OUTPUT->user_picture($mainmoderator, array('size' => 120));
+                        echo html_writer::end_tag('div');
+
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            echo html_writer::tag('div', fullname($mainmoderator), array('style' => ''));
+                            echo html_writer::tag('small', $mainmoderator->description, array('style' => ''));
+                        echo html_writer::end_tag('div');
+                    echo html_writer::end_tag('div');
+                }
+                // Break space.
+                echo html_writer::tag('br','');
+
+                if (!empty($mainspeaker)) {
+                    // Moderators Bio.
+                    echo html_writer::start_tag('div', array('class' => 'row'));
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            echo $OUTPUT->user_picture($mainspeaker, array('size' => 120));
+                        echo html_writer::end_tag('div');
+
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            echo html_writer::tag('div', fullname($mainspeaker), array('style' => ''));
+                            echo html_writer::tag('small', $mainspeaker->description, array('style' => ''));
+                        echo html_writer::end_tag('div');
+                    echo html_writer::end_tag('div');
+                }
+
+            echo html_writer::end_tag('div');
+
+        } else {
+
+            // ... Display in the whole page main speaker and moderator.
+            if (!empty($mainmoderator)) {
+                echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                    // Moderators Bio.
+                    echo html_writer::start_tag('div', array('class' => 'row'));
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            echo $OUTPUT->user_picture($mainmoderator, array('size' => 120));
+                        echo html_writer::end_tag('div');
+
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            echo html_writer::tag('div', fullname($mainmoderator), array('style' => ''));
+                            echo html_writer::tag('small', $mainmoderator->description, array('style' => ''));
+                        echo html_writer::end_tag('div');
+                    echo html_writer::end_tag('div');
+                echo html_writer::end_tag('div');
+            }
+
+            if (!empty($mainspeaker)) {
+                echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                    // Moderators Bio.
+                    echo html_writer::start_tag('div', array('class' => 'row'));
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            echo $OUTPUT->user_picture($mainspeaker, array('size' => 120));
+                        echo html_writer::end_tag('div');
+
+                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            echo html_writer::tag('div', fullname($mainspeaker), array('style' => ''));
+                            echo html_writer::tag('small', $mainspeaker->description, array('style' => ''));
+                        echo html_writer::end_tag('div');
+                    echo html_writer::end_tag('div');
+                echo html_writer::end_tag('div');
+            }
+
+        }
+
+    echo html_writer::end_tag('div');
+
+    // Break space.
+    echo html_writer::tag('br','');
+
+    // Access to course and description.
+    echo html_writer::start_tag('div', array('class' => 'row'));
+        echo html_writer::start_tag('div', array('class' => 'col-sm-12'));
+            echo html_writer::link(
+                new moodle_url('/course/view.php', array('id' => $e->courseid)),
+                '<center>' . get_string('registerprogram', 'block_eventpage') . '</center>', $linkcolor
+            );
+            echo html_writer::tag('br','');
+            echo html_writer::tag('div', $e->description, array('style' => 'text-align: justify;'));
+            echo $categorylink;
+
+        echo html_writer::end_tag('div');
+    echo html_writer::end_tag('div');
+echo html_writer::end_tag('div');
+echo $OUTPUT->footer();
