@@ -74,54 +74,51 @@ $PAGE->navbar->ignore_active();
 // $PAGE->navbar->add($node, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('title_editcourse', 'block_eventpage'));
 
-$maxbytes = $CFG->maxbytes;
-$attachmentoptions  = array('subdirs'=>false, 'maxfiles'=>1, 'maxbytes'=>$maxbytes);
-$mform              = new process_form(null, array('attachmentoptions'=>$attachmentoptions));
+$maxbytes           = $CFG->maxbytes;
+$attachmentoptions  = array(
+    'subdirs'   =>false,
+    'maxfiles'  =>1,
+    'maxbytes'  =>$maxbytes
+);
 
-// $filemanageropts    = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 1, 'context' => $context);
-// $customdata         = array('filemanageropts' => $filemanageropts);
+$textfieldoptions   = array(
+    'trusttext' => true,
+    'subdirs'   => true,
+    'maxfiles'  => 20,
+    'maxbytes'  => $maxbytes,
+    'context'   => $context
+);
 
-// $draftitemid        = file_get_submitted_draft_itemid('attachments');
-// file_prepare_draft_area($draftitemid, $context->id, 'block_eventpage', 'attachment', $e->id, $filemanageropts);
 
+$mform = new process_form(
+    null,
+    array('attachmentoptions' => $attachmentoptions, 'textfieldoptions' => $textfieldoptions)
+);
 
 // Could also use $CFG->maxbytes if you are not coding within a course context
-echo "<br><br><br><br><br><br><br><br><br><br>";
 if (isset($e) && !empty($e)) {
     $attachment = file_prepare_standard_filemanager($e, 'logopath', $attachmentoptions, $context,
                                            'block_eventpage', 'intro', 0);
 
+    $description = file_prepare_standard_editor($e, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0);
+
 }
 
-
-// Load description.
-if (empty($description->id)) {
-    $description                = new stdClass;
-    $description->id            = null;
-    $description->definition    = '';
-    $description->format        = FORMAT_HTML;
-}
-
-// $dataform                       = new stdClass;
-// $dataform->id                   = (isset($e->id)) ? $e->id : null;
-// // $dataform->attachments          = $draftitemid;
-// $dataform->courseid             = $course->id;
-// print_object($e->description);
-// $e->description['text']  = (isset($e->description)) ? $e->description : '';
 
 $mform->set_data($e);
 
 if ($data = $mform->get_data()) {
 
     // Content of editor.
-    $data->description  = $data->description['text'];
+    // $data->description  = $data->description['text'];
     $result             = false;
 
     if ($data->action == 'add') {
 
         // Save record and the attachment image.
         $itemid = block_eventpage_save_record($data);
-        file_save_draft_area_files($data->attachments, $context->id, 'block_eventpage', 'attachment', 0, $filemanageropts);
+        $data = file_postupdate_standard_filemanager($data, 'logopath', $attachmentoptions, $context,
+                                              'block_eventpage', 'intro', 0);
 
         // Prepare URL to redirect.
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
@@ -134,20 +131,15 @@ if ($data = $mform->get_data()) {
 
     if ($data->action == 'edit') {
 
-        echo "FOMR SUBMISION: <br>";
-        // print_object($data);
-        echo "<br>";
-
-
         $data = file_postupdate_standard_filemanager($data, 'logopath', $attachmentoptions, $context,
                                               'block_eventpage', 'intro', 0);
 
-        print_object($data);
+        $data = file_postupdate_standard_editor($data, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0);
 
         $data->logopath = $data->logopath_filemanager;
-        block_eventpage_update_record($data);
 
-        // file_save_draft_area_files($data->attachments, $context->id, 'block_eventpage', 'attachment', $itemid, $filemanageropts);
+        print_object($data);
+        block_eventpage_update_record($data);
 
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $returnmsg = 'The event page was succesfully updated';

@@ -70,9 +70,9 @@ class process_form extends moodleform {
         $mform->setType('endtime', PARAM_NOTAGS);
         $mform->addRule('endtime', null, 'required', null, 'server');
 
-        $mform->addElement ('editor', 'description', get_string('description', 'block_eventpage'));
-        $mform->setType('description', PARAM_RAW);
-        $mform->addRule('description', null, 'required', null, 'server');
+        $mform->addElement ('editor', 'description_editor', get_string('description', 'block_eventpage'));
+        $mform->setType('description_editor', PARAM_RAW);
+        $mform->addRule('description_editor', null, 'required', null, 'server');
 
         $mform->addElement('filemanager', 'logopath_filemanager', get_string('logo', 'block_eventpage'), null,
                     array('subdirs' => 0, 'maxbytes' => 10485760, 'areamaxbytes' => 10485760, 'maxfiles' => 1));

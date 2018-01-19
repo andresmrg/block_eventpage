@@ -64,3 +64,5 @@ $string['mustbenumeric'] = 'The value must be numeric.';
 $string['explorearea'] = 'Explore More Programs on [therapautic area]';
 $string['general'] = 'General';
 $string['advance'] = 'Advance';
+$string['moderator'] = 'Moderator';
+$string['speaker'] = 'Speaker';

@@ -29,18 +29,21 @@ require_once('locallib.php');
 
 global $DB;
 
-$PAGE->set_url('/blocks/eventpage/process.php');
-$PAGE->set_pagelayout('print');
+$PAGE->set_pagelayout('base');
 
 $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.min.js'));
-$PAGE->requires->js(new moodle_url('/blocks/eventpage/js/map.js'));
+$PAGE->requires->js(new moodle_url('/blocks/eventpage/js/locallib.js'));
 
 $eventid = optional_param('id', 0, PARAM_INT);
 $e       = block_eventpage_get_page($eventid);
 
-$context  = context_course::instance($e->courseid);
+$PAGE->set_url('/blocks/eventpage/view.php?id=' . $e->id);
+
+
+$context   = context_course::instance($e->courseid);
 $PAGE->set_context($context);
-$contextid      = block_eventpage_get_contextid($e->courseid, $context->contextlevel);
+$contextid = block_eventpage_get_contextid($e->courseid, $context->contextlevel);
+$PAGE->set_title($e->name);
 
 // Get moderators and speakers users.
 $moderatorid     = $DB->get_field('role', 'id', array('shortname' => 'moderator'));
@@ -88,11 +91,10 @@ if ($files = $fs->get_area_files($context->id, 'block_eventpage', 'intro', 0, nu
 
     // Look through each file being managed
     foreach ($files as $file) {
-
         $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-
-        $logo = html_writer::empty_tag('img', array('src' => $url, 'style' => 'height: 127px'));
+        $logo = html_writer::empty_tag('img', array('src' => $url, 'style' => 'height: 120px'));
     }
+
 }
 
 echo $OUTPUT->header();
@@ -108,9 +110,8 @@ echo html_writer::start_tag('div', $containerattr);
                 echo html_writer::tag('div', $logo, array('style' => ''));
             echo html_writer::end_tag('div');
 
-
             // Language side.
-            echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+            echo html_writer::start_tag('div', array('class' => 'col-sm-6', 'id' => 'languageselector'));
                 echo html_writer::tag('div', '', array('style' => ''));
             echo html_writer::end_tag('div');
 
@@ -132,11 +133,11 @@ echo html_writer::start_tag('div', $containerattr);
             echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate), array('style' => ''));
 
             if (!empty($moderators)) {
-                echo html_writer::tag('div', 'Moderator: ' . $moderators, array('style' => ''));
+                echo html_writer::tag('div', get_string('moderator', 'block_eventpage') . ': ' . $moderators, array('style' => ''));
             }
 
             if (!empty($speakers)) {
-                echo html_writer::tag('div', 'Speaker: ' . $speakers, array('style' => ''));
+                echo html_writer::tag('div', get_string('speaker', 'block_eventpage') . ': ' . $speakers, array('style' => ''));
             }
 
         echo html_writer::end_tag('div');
@@ -145,7 +146,7 @@ echo html_writer::start_tag('div', $containerattr);
         // Right side.
         echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
 
-            echo html_writer::tag('div', 'Time: ' . $e->starttime . ' - ' . $e->endtime, array('style' => ''));
+            echo html_writer::tag('div', get_string('time', 'block_eventpage') . ': ' . $e->starttime . ' - ' . $e->endtime, array('style' => ''));
             echo html_writer::tag('br','');
             echo html_writer::tag('br','');
         echo html_writer::end_tag('div');
@@ -159,7 +160,7 @@ echo html_writer::start_tag('div', $containerattr);
         // If the map is not empty, then display the map and the main speaker and moderator.
         if (!$emptymap) {
             echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-                echo html_writer::tag('div', "Location: {$e->city}, {$e->street}, {$e->other}", array('style' => ''));
+                echo html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}", array('style' => ''));
 
                 // Map.
                 if (!$emptybio) {
