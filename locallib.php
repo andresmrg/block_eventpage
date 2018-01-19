@@ -90,7 +90,6 @@ function block_eventpage_save_record($from) {
 
 function block_eventpage_update_record($from) {
     global $DB;
-    $from->id = $from->eventid;
     return $DB->update_record('block_eventpage', $from);
 }
 

@@ -33,7 +33,7 @@ if (isguestuser()) {
     print_error('guestsarenotallowed');
 }
 
-global $OUTPUT, $PAGE, $DB;
+global $OUTPUT, $PAGE, $DB, $USER, $CFG;
 
 $PAGE->set_url('/blocks/eventpage/process.php');
 $PAGE->set_pagelayout('standard');
@@ -51,6 +51,7 @@ if (!empty($courseid)) {
 }
 
 // Get course context.
+// $context = context_system::instance();
 $context = context_course::instance($course->id);
 $PAGE->set_context($context);
 
@@ -58,7 +59,6 @@ $PAGE->set_context($context);
 if ($action == 'del') {
     $e = block_eventpage_get_page($eventid);
     $result = block_eventpage_delete_record($e);
-    var_dump($result);
 
     $returnurl = new moodle_url('/blocks/eventpage/list.php');
     $returnmsg = 'The event page was succesfully deleted';
@@ -69,74 +69,91 @@ if ($action == 'del') {
 $PAGE->set_title(get_string('title_editcourse', 'block_eventpage'));
 $PAGE->set_heading(get_string('title_editcourse', 'block_eventpage'));
 
-
 // Nav breadcump.
 $PAGE->navbar->ignore_active();
 // $PAGE->navbar->add($node, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('title_editcourse', 'block_eventpage'));
 
+$maxbytes = $CFG->maxbytes;
+$attachmentoptions  = array('subdirs'=>false, 'maxfiles'=>1, 'maxbytes'=>$maxbytes);
+$mform              = new process_form(null, array('attachmentoptions'=>$attachmentoptions));
 
-$mform    = new process_form();
+// $filemanageropts    = array('subdirs' => 0, 'maxbytes' => '0', 'maxfiles' => 1, 'context' => $context);
+// $customdata         = array('filemanageropts' => $filemanageropts);
 
-// Load existing files into draft area.
-if (empty($logopath->id)) {
-    $logopath               = new stdClass;
-    $logopath->id           = 0;
-    $logopath->definition   = '';
-    $logopath->format       = FORMAT_HTML;
+// $draftitemid        = file_get_submitted_draft_itemid('attachments');
+// file_prepare_draft_area($draftitemid, $context->id, 'block_eventpage', 'attachment', $e->id, $filemanageropts);
+
+
+// Could also use $CFG->maxbytes if you are not coding within a course context
+echo "<br><br><br><br><br><br><br><br><br><br>";
+if (isset($e) && !empty($e)) {
+    $attachment = file_prepare_standard_filemanager($e, 'logopath', $attachmentoptions, $context,
+                                           'block_eventpage', 'intro', 0);
+
 }
 
-$draftid_editor = file_get_submitted_draft_itemid('logopath');
-file_prepare_draft_area($draftid_editor, $context->id, 'block_eventpage', 'logopath',
-                                       $logopath->id, array('subdirs'=>true), $logopath->definition);
 
 // Load description.
 if (empty($description->id)) {
-    $description = new stdClass;
-    $description->id = null;
-    $description->definition = '';
-    $description->format = FORMAT_HTML;
+    $description                = new stdClass;
+    $description->id            = null;
+    $description->definition    = '';
+    $description->format        = FORMAT_HTML;
 }
 
-// Prepare some data to send to the form.
-$dataform           = new stdClass;
-$dataform->logopath = $draftid_editor;
-$dataform->courseid = $course->id;
-$dataform->description['text'] = (isset($e->description)) ? $e->description : '';
-$mform->set_data($dataform);
+// $dataform                       = new stdClass;
+// $dataform->id                   = (isset($e->id)) ? $e->id : null;
+// // $dataform->attachments          = $draftitemid;
+// $dataform->courseid             = $course->id;
+// print_object($e->description);
+// $e->description['text']  = (isset($e->description)) ? $e->description : '';
 
-if ($from = $mform->get_data()) {
+$mform->set_data($e);
+
+if ($data = $mform->get_data()) {
 
     // Content of editor.
-    $from->description = $from->description['text'];
-    $result = false;
-    if ($from->action == 'add') {
-        $result = block_eventpage_save_record($from);
+    $data->description  = $data->description['text'];
+    $result             = false;
 
-        file_save_draft_area_files($from->logopath, $context->id, 'block_eventpage', 'logopath',
-                                          $logopath->id, array('subdirs' => 0));
+    if ($data->action == 'add') {
 
+        // Save record and the attachment image.
+        $itemid = block_eventpage_save_record($data);
+        file_save_draft_area_files($data->attachments, $context->id, 'block_eventpage', 'attachment', 0, $filemanageropts);
+
+        // Prepare URL to redirect.
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $returnmsg = 'The event page was succesfully saved';
+
+        // Redirect to the course page.
         redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_SUCCESS);
+
     }
 
-    if ($from->action == 'edit') {
-        file_save_draft_area_files($from->logopath, $context->id, 'block_eventpage', 'logopath',
-                                          $logopath->id, array('subdirs' => 0));
-        block_eventpage_update_record($from);
+    if ($data->action == 'edit') {
+
+        echo "FOMR SUBMISION: <br>";
+        // print_object($data);
+        echo "<br>";
+
+
+        $data = file_postupdate_standard_filemanager($data, 'logopath', $attachmentoptions, $context,
+                                              'block_eventpage', 'intro', 0);
+
+        print_object($data);
+
+        $data->logopath = $data->logopath_filemanager;
+        block_eventpage_update_record($data);
+
+        // file_save_draft_area_files($data->attachments, $context->id, 'block_eventpage', 'attachment', $itemid, $filemanageropts);
+
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $returnmsg = 'The event page was succesfully updated';
         redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_SUCCESS);
+
     }
-
-    // We need to add code to appropriately act on and store the submitted data.
-    // if (!$DB->update_record('block_eventpage_course', $mform)) {
-    //     print_error('inserterror', 'block_eventpage');
-    // }
-
-    // $courseurl = new moodle_url('/blocks/eventpage/manageeventpage.php?success=edited');
-    // redirect($courseurl);
 
 } else {
     // ... mform didn't validate or this is the first display.

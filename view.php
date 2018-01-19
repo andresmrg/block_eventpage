@@ -29,8 +29,6 @@ require_once('locallib.php');
 
 global $DB;
 
-$context = context_system::instance();
-$PAGE->set_context($context);
 $PAGE->set_url('/blocks/eventpage/process.php');
 $PAGE->set_pagelayout('print');
 
@@ -40,8 +38,9 @@ $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/map.js'));
 $eventid = optional_param('id', 0, PARAM_INT);
 $e       = block_eventpage_get_page($eventid);
 
-$coursecontext  = context_course::instance($e->courseid);
-$contextid      = block_eventpage_get_contextid($e->courseid, $coursecontext->contextlevel);
+$context  = context_course::instance($e->courseid);
+$PAGE->set_context($context);
+$contextid      = block_eventpage_get_contextid($e->courseid, $context->contextlevel);
 
 // Get moderators and speakers users.
 $moderatorid     = $DB->get_field('role', 'id', array('shortname' => 'moderator'));
@@ -51,7 +50,6 @@ $moderators      = block_eventpage_get_role_name_list($moderatorarray);
 $speakerid       = $DB->get_field('role', 'id', array('shortname' => 'speaker'));
 $speakerarray    = block_eventpage_get_user_from_role($speakerid, $contextid);
 $speakers        = block_eventpage_get_role_name_list($speakerarray);
-
 
 // Get main moderators and speakers
 $mainmoderatorid     = $DB->get_field('role', 'id', array('shortname' => 'mainmoderator'));
@@ -85,10 +83,38 @@ if (isset($e->fontcolor)) {
     $containerattr['style'] .= "color: $e->fontcolor";
 }
 
+$fs = get_file_storage();
+if ($files = $fs->get_area_files($context->id, 'block_eventpage', 'intro', 0, null, false)) {
+
+    // Look through each file being managed
+    foreach ($files as $file) {
+
+        $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+
+        $logo = html_writer::empty_tag('img', array('src' => $url, 'style' => 'height: 127px'));
+    }
+}
+
 echo $OUTPUT->header();
 echo html_writer::start_tag('div', $containerattr);
     // Header.
     echo html_writer::start_tag('header');
+
+        // Logo and language.
+        echo html_writer::start_tag('div', array('class' => 'row'));
+
+            // Logo side.
+            echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                echo html_writer::tag('div', $logo, array('style' => ''));
+            echo html_writer::end_tag('div');
+
+
+            // Language side.
+            echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                echo html_writer::tag('div', '', array('style' => ''));
+            echo html_writer::end_tag('div');
+
+        echo html_writer::end_tag('div');
 
         echo html_writer::start_tag('div');
             echo html_writer::tag('h1', $e->name, array('style' => 'text-align: center; padding: 20px;'));
