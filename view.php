@@ -27,10 +27,37 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/lib/filelib.php');
 require_once('locallib.php');
 
-global $DB;
+global $DB, $CFG, $PAGE;
+
+$CFG->additionalhtmlhead .= '<style>
+    .card {
+        border: 0px !important;
+        background-color: transparent;
+    }
+    .navbar-light {
+        background-color: transparent;
+        border-bottom: 0px !important;
+    }
+    #page-wrapper::after {
+        min-height: 0px;
+    }
+    .nav-item {
+        width: auto;
+        position: absolute;
+        right: 0;
+        border: 1px solid #F4F4F4;
+        padding: 10px 20px;
+    }
+
+    #page-header { display: none }
+    #page-footer { display:none }
+    .navbar-nav { display:none }
+    #page { margin-top: 0px !important;
+    #page.container-fluid { padding: 0px !important; }
+
+</style>';
 
 $PAGE->set_pagelayout('base');
-
 $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.min.js'));
 $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/locallib.js'));
 

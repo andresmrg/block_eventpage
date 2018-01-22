@@ -182,5 +182,17 @@ function block_eventpage_get_course_category($courseid, $linkcolor) {
 
 }
 
+function block_eventpage_get_courses() {
+    global $DB;
+    $courses = $DB->get_records_sql('SELECT * FROM {course} WHERE 1');
+
+    $temp = array();
+    foreach ($courses as $course) {
+        $temp[$course->id] = $course->fullname;
+    }
+
+    return $temp;
+}
+
 
 

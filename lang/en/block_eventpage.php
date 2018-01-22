@@ -66,3 +66,4 @@ $string['general'] = 'General';
 $string['advance'] = 'Advance';
 $string['moderator'] = 'Moderator';
 $string['speaker'] = 'Speaker';
+$string['addneweventpage'] = 'Add New Event Page';

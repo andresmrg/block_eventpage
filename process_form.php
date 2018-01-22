@@ -39,7 +39,6 @@ class process_form extends moodleform {
         $mform    = & $this->_form;
         $courseid = optional_param('courseid', 0, PARAM_INT);
         $action   = optional_param('action', '', PARAM_NOTAGS);
-        // $eventid  = optional_param('id', 0, PARAM_INT);
 
         // If editing, lets hide submit the id hidden.
         $mform->addElement('hidden', 'id');
@@ -110,40 +109,6 @@ class process_form extends moodleform {
         $mform->setType('fontcolor', PARAM_NOTAGS);
         $mform->addElement('text', 'linkcolor', get_string('linkcolor', 'block_eventpage'));
         $mform->setType('linkcolor', PARAM_NOTAGS);
-
-        // if ($action == 'edit') {
-
-        //     // Load existing event.
-        //     $eventpage = block_eventpage_get_page($eventid);
-        //     $mform->setDefault('name', $eventpage->name);
-        //     $mform->setDefault('description', $eventpage->description);
-        //     $mform->setDefault('startdate', $eventpage->startdate);
-        //     $mform->setDefault('starttime', $eventpage->starttime);
-        //     $mform->setDefault('endtime', $eventpage->endtime);
-        //     $mform->setDefault('themecolor', $eventpage->themecolor);
-        //     $mform->setDefault('fontcolor', $eventpage->fontcolor);
-        //     $mform->setDefault('linkcolor', $eventpage->linkcolor);
-        //     $mform->setDefault('latitude', $eventpage->latitude);
-        //     $mform->setDefault('longitude', $eventpage->longitude);
-        //     $mform->setDefault('distance', $eventpage->distance);
-        //     $mform->setDefault('street', $eventpage->street);
-        //     $mform->setDefault('city', $eventpage->city);
-        //     $mform->setDefault('zipcode', $eventpage->zipcode);
-        //     $mform->setDefault('other', $eventpage->other);
-        // }
-
-        // if ($action == 'add') {
-
-        //     if (!empty($courseid)) {
-        //         $courseinfo = block_eventpage_get_course_info($courseid);
-        //         $mform->addElement (
-        //            'editor',
-        //            'description',
-        //            get_string('description', 'block_eventpage')
-        //         );
-        //     }
-
-        // }
 
         $this->add_action_buttons();
     }

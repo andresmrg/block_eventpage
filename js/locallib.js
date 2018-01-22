@@ -10,21 +10,16 @@ $('document').ready(function() {
         console.log(e);
     }
 
-    $('.nav-item').appendTo("#languageselector");
-    $('.nav-item').css({
-        width: '170px',
-        position: 'absolute',
-        right: '0',
-        border: '1px solid #F4F4F4',
-        padding: '10px 20px',
-    });
+        // JQuery.
+    $(location).attr('href');
 
-    $('#page-header').hide();
-    $('#page-footer').hide();
-    $('.navbar-nav').hide();
-    $('#page').css('margin-top', '0px !important');
-    $('#page.container-fluid').css('padding', '0px !important');
-    // $('header').css('visibility', 'hidden');
+    // Pure javascript.
+    var pathname = window.location.pathname;
+    var param = decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+
+    if (pathname == '/blocks/eventpage/view.php') {
+        $('.nav-item').appendTo("#languageselector");
+    }
 
     // function check_confirm() {
     //     var c = confirm('Are you sure? Once deleted, users won\'t be able to access to this event!');
