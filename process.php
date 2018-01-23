@@ -137,8 +137,6 @@ if ($data = $mform->get_data()) {
         $data = file_postupdate_standard_editor($data, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0);
 
         $data->logopath = $data->logopath_filemanager;
-
-        print_object($data);
         block_eventpage_update_record($data);
 
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
