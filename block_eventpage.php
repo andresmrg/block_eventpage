@@ -18,7 +18,7 @@
  * eventpage block caps.
  *
  * @package    block_eventpage
- * @copyright  Daniel Neis <danielneis@gmail.com>
+ * @copyright  2018 Andres Ramos, LMS Doctor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
