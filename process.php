@@ -115,10 +115,15 @@ if ($data = $mform->get_data()) {
     if ($data->action == 'add') {
 
         // Save record and the attachment image.
-        $itemid = block_eventpage_save_record($data);
         $data = file_postupdate_standard_filemanager(
             $data, 'logopath', $attachmentoptions, $context, 'block_eventpage', 'intro', 0
         );
+
+        $data = file_postupdate_standard_editor(
+            $data, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0
+        );
+
+        $itemid = block_eventpage_save_record($data);
 
         // Prepare URL to redirect.
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
