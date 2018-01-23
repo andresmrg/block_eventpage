@@ -28,11 +28,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Returns course record.
+ * @param  int     $courseid
+ * @return object
+ */
 function block_eventpage_get_course_info($courseid) {
     global $DB;
     return $DB->get_record('course', array('id' => $courseid));
 }
 
+/**
+ * Returns event page record.
+ * @param  int     $eventid
+ * @return object
+ */
 function block_eventpage_get_page($eventid) {
     global $DB;
     return $DB->get_record('block_eventpage', array('id' => $eventid));
