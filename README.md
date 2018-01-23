@@ -1,31 +1,18 @@
-Moodle Block Template
+Moodle Block Event Page
 =====================
 
-This is a template for Moodle blocks.
+Events are implemented as Moodle courses. The content for public pages for events is derived from the standard course description field. Event Page, will make the public event pages accessible to users outside the secured area (i.e. to users who are not logged in).
 
-It is used by Moosh (http://moosh-online.com/) to generate new block plugins.
+# Terminology
 
-* This template assumes that the block is using a textual content type by default. If you want your block to display a list of items (using $this->content->items and $this->content->icons instead of $this->content->text), change the derived class of the block, from extends block_base to extends block_list. For more information: https://docs.moodle.org/dev/Blocks#Additional_Content_Types.
+Event: A Moodle course dedicated to a specific promotional event which has training materials attached to it.
+Event Page: a publicly accessible page (no login required) for a specific event. An event page is created and edited from inside a course.
 
-* Go to Settings > Site Administration > Development > XMLDB editor and modify the module's tables.
+# Features
 
-* Modify version.php and set the initial version of you module.
-
-* Visit Settings > Site Administration > Notifications, you should find
-the module's tables successfully created
-
-* Go to Site Administration > Plugins > Blocks > Manage blocks
-and you should find that this eventpage has been added to the list of
-installed modules.
-
-* You may now proceed to run your own code in an attempt to develop
-your module. You will probably want to modify block_newmodule.php
-and edit_form.php as a first step. Check db/access.php to add
-capabilities.
-
-We encourage you to share your code and experience - visit http://moodle.org
-
-Good luck!
-
-[![Build Status](https://travis-ci.org/danielneis/moodle-block_eventpage.svg?branch=master)](https://travis-ci.org/danielneis/moodle-block_eventpage)
-# block_eventpage
+* Managers have the ability to create / edit an event page from a course.
+* Managers have the ability to delete an event page.
+* Managers can access to a list of all event pages.
+* Google Map coordenates can be added in an event page.
+* Users have the ability to change the background, font and link color of an event.
+* Non-login users can view an event page.
