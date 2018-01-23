@@ -38,6 +38,11 @@ function block_eventpage_get_page($eventid) {
     return $DB->get_record('block_eventpage', array('id' => $eventid));
 }
 
+/**
+ * Save event page record.
+ * @param  object $from
+ * @return mixed
+ */
 function block_eventpage_save_record($from) {
     global $DB, $USER;
 
@@ -69,17 +74,32 @@ function block_eventpage_save_record($from) {
 
 }
 
+/**
+ * Update event page record.
+ * @param  object $from
+ * @return boolean
+ */
 function block_eventpage_update_record($from) {
     global $DB;
     return $DB->update_record('block_eventpage', $from);
 }
 
+/**
+ * Delete event page record.
+ * @param  object $from
+ * @return boolean
+ */
 function block_eventpage_delete_record($from) {
     global $DB;
     return $DB->delete_records('block_eventpage', array('id' => $from->id));
 }
 
-
+/**
+ * Returns users belonging to a specific role in an string array.
+ * @param  int    $roleid
+ * @param  int    $contextid
+ * @return array
+ */
 function block_eventpage_get_user_from_role($roleid, $contextid) {
     global $DB;
 
@@ -100,6 +120,11 @@ function block_eventpage_get_user_from_role($roleid, $contextid) {
     return $userlist;
 }
 
+/**
+ * Returns names in a comma separated string.
+ * @param  object $list
+ * @return string
+ */
 function block_eventpage_get_role_name_list($list) {
 
     if (empty($list)) {
@@ -114,6 +139,11 @@ function block_eventpage_get_role_name_list($list) {
     return implode(', ', $temp);
 }
 
+/**
+ * Returns the record in the list.
+ * @param  array  $list
+ * @return object
+ */
 function block_eventpage_get_single_user($list) {
 
     if (empty($list)) {
@@ -123,7 +153,11 @@ function block_eventpage_get_single_user($list) {
     return $list[0];
 }
 
-
+/**
+ * Returns users belonging to a specific role in an string array.
+ * @param  int    $roleid
+ * @return string
+ */
 function block_eventpage_get_bio($roleid) {
     global $DB;
     $users = $DB->get_records('role_assignments', array('roleid' => $roleid), 'timemodified', 'userid');
@@ -142,11 +176,23 @@ function block_eventpage_get_bio($roleid) {
     return $strusers;
 }
 
+/**
+ * Returns the id from the context table.
+ * @param  int $courseid
+ * @param  int $level
+ * @return int
+ */
 function block_eventpage_get_contextid($courseid, $level) {
     global $DB;
     return $DB->get_field('context', 'id', array('contextlevel' => $level, 'instanceid' => $courseid));
 }
 
+/**
+ * Returns the link to access to a parent category if any.
+ * @param  int    $courseid
+ * @param  string $linkcolor
+ * @return string
+ */
 function block_eventpage_get_course_category($courseid, $linkcolor) {
     global $DB;
 
@@ -163,6 +209,10 @@ function block_eventpage_get_course_category($courseid, $linkcolor) {
 
 }
 
+/**
+ * Returns list of courses in an array.
+ * @return array
+ */
 function block_eventpage_get_courses() {
     global $DB;
     $courses = $DB->get_records_sql('SELECT * FROM {course} WHERE 1');
