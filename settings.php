@@ -23,12 +23,3 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-// $settings->add(new admin_setting_heading('sampleheader',
-//                                          get_string('headerconfig', 'block_eventpage'),
-//                                          get_string('descconfig', 'block_eventpage')));
-
-// $settings->add(new admin_setting_configcheckbox('eventpage/foo',
-//                                                 get_string('labelfoo', 'block_eventpage'),
-//                                                 get_string('descfoo', 'block_eventpage'),
-//                                                 '0'));

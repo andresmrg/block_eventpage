@@ -22,13 +22,16 @@
  * @copyright  2017 LMS Doctor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+
 function xmldb_block_eventpage_upgrade($oldversion) {
     global $CFG, $DB;
 
     $result = true;
     $dbman  = $DB->get_manager();
 
-        if ($oldversion < 2018010200) {
+    if ($oldversion < 2018010200) {
 
         // Define table block_eventpage to be created.
         $table = new xmldb_table('block_eventpage');
@@ -161,8 +164,6 @@ function xmldb_block_eventpage_upgrade($oldversion) {
         // Eventpage savepoint reached.
         upgrade_block_savepoint(true, 2018010205, 'eventpage');
     }
-
-
 
     return $result;
 }

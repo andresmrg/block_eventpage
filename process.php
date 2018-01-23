@@ -45,13 +45,12 @@ $e        = block_eventpage_get_page($eventid);
 
 // If course id is empty, we are probably editing.
 if (!empty($courseid)) {
-    $course = $DB->get_record('course', array('id' => $courseid), $fields='id, fullname');
+    $course = $DB->get_record('course', array('id' => $courseid), $fields = 'id, fullname');
 } else {
-    $course = $DB->get_record('course', array('id' => $e->courseid), $fields='id, fullname');
+    $course = $DB->get_record('course', array('id' => $e->courseid), $fields = 'id, fullname');
 }
 
 // Get course context.
-// $context = context_system::instance();
 $context = context_course::instance($course->id);
 $PAGE->set_context($context);
 
@@ -71,14 +70,13 @@ $PAGE->set_heading(get_string('title_editcourse', 'block_eventpage'));
 
 // Nav breadcump.
 $PAGE->navbar->ignore_active();
-// $PAGE->navbar->add($node, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('title_editcourse', 'block_eventpage'));
 
 $maxbytes           = $CFG->maxbytes;
 $attachmentoptions  = array(
-    'subdirs'   =>false,
-    'maxfiles'  =>1,
-    'maxbytes'  =>$maxbytes
+    'subdirs'   => false,
+    'maxfiles'  => 1,
+    'maxbytes'  => $maxbytes
 );
 
 $textfieldoptions   = array(
@@ -95,12 +93,15 @@ $mform = new process_form(
     array('attachmentoptions' => $attachmentoptions, 'textfieldoptions' => $textfieldoptions)
 );
 
-// Could also use $CFG->maxbytes if you are not coding within a course context
+// Could also use $CFG->maxbytes if you are not coding within a course context.
 if (isset($e) && !empty($e)) {
-    $attachment = file_prepare_standard_filemanager($e, 'logopath', $attachmentoptions, $context,
-                                           'block_eventpage', 'intro', 0);
+    $attachment = file_prepare_standard_filemanager(
+        $e, 'logopath', $attachmentoptions, $context, 'block_eventpage', 'intro', 0
+    );
 
-    $description = file_prepare_standard_editor($e, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0);
+    $description = file_prepare_standard_editor(
+        $e, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0
+    );
 
 }
 
@@ -110,15 +111,14 @@ $mform->set_data($e);
 if ($data = $mform->get_data()) {
 
     // Content of editor.
-    // $data->description  = $data->description['text'];
-    $result             = false;
-
+    $result = false;
     if ($data->action == 'add') {
 
         // Save record and the attachment image.
         $itemid = block_eventpage_save_record($data);
-        $data = file_postupdate_standard_filemanager($data, 'logopath', $attachmentoptions, $context,
-                                              'block_eventpage', 'intro', 0);
+        $data = file_postupdate_standard_filemanager(
+            $data, 'logopath', $attachmentoptions, $context, 'block_eventpage', 'intro', 0
+        );
 
         // Prepare URL to redirect.
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
@@ -131,10 +131,13 @@ if ($data = $mform->get_data()) {
 
     if ($data->action == 'edit') {
 
-        $data = file_postupdate_standard_filemanager($data, 'logopath', $attachmentoptions, $context,
-                                              'block_eventpage', 'intro', 0);
+        $data = file_postupdate_standard_filemanager(
+            $data, 'logopath', $attachmentoptions, $context, 'block_eventpage', 'intro', 0
+        );
 
-        $data = file_postupdate_standard_editor($data, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0);
+        $data = file_postupdate_standard_editor(
+            $data, 'description', $textfieldoptions, $context, 'block_eventpage', 'description', 0
+        );
 
         $data->logopath = $data->logopath_filemanager;
         block_eventpage_update_record($data);
@@ -149,10 +152,5 @@ if ($data = $mform->get_data()) {
     // ... mform didn't validate or this is the first display.
     echo $OUTPUT->header();
     $mform->display();
-    // if (has_capability('block/eventpage:editeventpage', $context, $USER->id)) {
-    //     $mform->display();
-    // } else {
-    //     print_error('nopermissiontoviewpage', 'error', '');
-    // }
     echo $OUTPUT->footer();
 }

@@ -26,11 +26,11 @@ defined('MOODLE_INTERNAL') || die();
 
 class block_eventpage extends block_list {
 
-    function init() {
+    public function init() {
         $this->title = get_string('pluginname', 'block_eventpage');
     }
 
-    function get_content() {
+    public function get_content() {
         global $CFG, $OUTPUT, $DB;
 
         $courseid = optional_param('id', 0, PARAM_INT);
@@ -65,12 +65,14 @@ class block_eventpage extends block_list {
         $processurl = new moodle_url('/blocks/eventpage/process.php', $params);
 
         $this->content->items[] = html_writer::link($processurl, $showlink);
-        $this->content->items[] = html_writer::link(new moodle_url('/blocks/eventpage/list.php'), get_string('seeall', 'block_eventpage'));
+        $this->content->items[] = html_writer::link(
+            new moodle_url('/blocks/eventpage/list.php'), get_string('seeall', 'block_eventpage')
+        );
 
         return $this->content;
     }
 
-    // my moodle can only have SITEID and it's redundant here, so take it away
+    // My moodle can only have SITEID and it's redundant here, so take it away.
     public function applicable_formats() {
         return array('all' => false,
                      'site' => true,
@@ -85,7 +87,7 @@ class block_eventpage extends block_list {
           return true;
     }
 
-    function has_config() {
+    public function has_config() {
         return true;
     }
 

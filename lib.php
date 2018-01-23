@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Library file for filemanager demo
  *
@@ -20,6 +21,7 @@
  * @copyright 2018 Andres Ramos, LMS Doctor
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 function block_eventpage_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
@@ -35,9 +37,9 @@ function block_eventpage_pluginfile($course, $cm, $context, $filearea, $args, $f
     // Extract the filename / filepath from the $args array.
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'
+        $filepath = '/'; // ...$args is empty => the path is '/'.
     } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+        $filepath = '/'.implode('/', $args).'/'; // ...$args contains elements of the filepath.
     }
 
     // Retrieve the file from the Files API.

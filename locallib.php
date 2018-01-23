@@ -26,6 +26,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 function block_eventpage_get_course_info($courseid) {
     global $DB;
     return $DB->get_record('course', array('id' => $courseid));
@@ -59,27 +61,6 @@ function block_eventpage_save_record($from) {
     $data->city             = $from->city;
     $data->zipcode          = $from->zipcode;
     $data->other            = $from->other;
-
-    // $data->name             = 'Title';
-    // $data->description      = 'Description here';
-    // $data->courseid         = 2;
-    // $data->startdate        = time();
-    // $data->starttime        = '8:00';
-    // $data->endtime          = '16:00';
-    // $data->logopath         = '/path/to/file';
-    // $data->creatorid        = $USER->id;
-
-    // $data->themecolor       = '#CCC';
-    // $data->fontcolor        = '#CCC';
-    // $data->linkcolor        = '#CCC';
-    // $data->latitude         = 0;
-    // $data->longitude        = 0;
-    // $data->distance         = 0;
-
-    // $data->street           = 'Cra 19 #94-10';
-    // $data->city             = 'Miami';
-    // $data->zipcode          = '33230';
-    // $data->other            = 'Building Luxury';
 
     $data->timecreated      = time();
     $data->timemodified     = 0;

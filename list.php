@@ -51,10 +51,15 @@ if (!$table->is_downloading()) {
         $PAGE->set_title(get_string('eventlist', 'block_eventpage'));
         $PAGE->set_heading(get_string('eventlist', 'block_eventpage'));
         $PAGE->navbar->add(get_string('eventlist', 'block_eventpage'));
-        echo $OUTPUT->header(); // Output header.
-        // $neweventurl = new moodle_url('/blocks/eventpage/process.php', array('action' => 'add', 's' => 'course'));
+
+        // Output header.
+        echo $OUTPUT->header();
         $neweventurl = new moodle_url('/course/management.php');
-        echo html_writer::link($neweventurl, get_string('addneweventpage', 'block_eventpage'), array('class' => 'btn btn-default'));
+        echo html_writer::link(
+            $neweventurl,
+            get_string('addneweventpage', 'block_eventpage'),
+            array('class' => 'btn btn-default')
+        );
 }
 
 $table->define_baseurl("$CFG->wwwroot/blocks/eventpage/list.php");

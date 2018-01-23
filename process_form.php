@@ -22,7 +22,7 @@
  * @copyright   2017 LMS Doctor
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 class process_form extends moodleform {
@@ -73,8 +73,10 @@ class process_form extends moodleform {
         $mform->setType('description_editor', PARAM_RAW);
         $mform->addRule('description_editor', null, 'required', null, 'server');
 
-        $mform->addElement('filemanager', 'logopath_filemanager', get_string('logo', 'block_eventpage'), null,
-                    array('subdirs' => 0, 'maxbytes' => 10485760, 'areamaxbytes' => 10485760, 'maxfiles' => 1));
+        $mform->addElement('filemanager', 'logopath_filemanager',
+            get_string('logo', 'block_eventpage'), null,
+            array('subdirs' => 0, 'maxbytes' => 10485760, 'areamaxbytes' => 10485760, 'maxfiles' => 1)
+        );
 
         // Location section.
         $mform->addElement('header', 'location', get_string('location', 'block_eventpage'));
@@ -99,7 +101,6 @@ class process_form extends moodleform {
         $mform->addElement('text', 'distance', get_string('distance', 'block_eventpage'));
         $mform->setType('distance', PARAM_INT);
 
-
         // Advance section.
         $mform->addElement('header', 'advance', get_string('advance', 'block_eventpage'));
 
@@ -113,7 +114,7 @@ class process_form extends moodleform {
         $this->add_action_buttons();
     }
 
-    function validation($data, $file) {
+    public function validation($data, $file) {
         $errors = array();
 
         if (!empty($data['latitude']) && !is_numeric($data['latitude'])) {

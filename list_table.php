@@ -21,6 +21,8 @@
  * @copyright   2015 Andres Ramos
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
 class list_table extends table_sql {
 
     /**
@@ -101,9 +103,10 @@ class list_table extends table_sql {
 
             $str .= " ";
 
-            // $deleteurl = new moodle_url('/blocks/eventpage/process.php', array('action' => 'del', 'id' => $values->id));
             $deleteurl = new moodle_url('/blocks/eventpage/process.php', array('action' => 'del', 'id' => $values->id));
-            $str .= html_writer::link($deleteurl, "Delete", array('class' => 'btn btn-default deleteEventPage', 'onclick' => 'return check_confirm()'));
+            $str .= html_writer::link($deleteurl, "Delete",
+                array('class' => 'btn btn-default deleteEventPage', 'onclick' => 'return check_confirm()')
+            );
 
             return $str;
         }

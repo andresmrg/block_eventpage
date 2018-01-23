@@ -102,6 +102,12 @@ $mainspeaker         = block_eventpage_get_single_user($mainspeakerarray);
 $emptybio         = (empty($mainspeaker) && empty($mainmoderator)) ? true : false;
 $emptymap         = (empty($e->latitude) && empty($e->longitude)) ? true : false;
 
+if (!$emptybio) {
+    $mapstyle = "width:500px; height:320px";
+} else {
+    $mapstyle = "width:960px; height:320px";
+}
+
 // Get course category.
 $linkcolor = (isset($e->linkcolor)) ? array('style' => 'color:' .$e->linkcolor.';') : array();
 $categorylink = block_eventpage_get_course_category($e->courseid, $linkcolor);
@@ -127,7 +133,11 @@ if ($files = $fs->get_area_files($context->id, 'block_eventpage', 'intro', 0, nu
 
     // Look through each file being managed
     foreach ($files as $file) {
-        $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+        $url = moodle_url::make_pluginfile_url(
+            $file->get_contextid(), $file->get_component(),
+            $file->get_filearea(), $file->get_itemid(),
+            $file->get_filepath(), $file->get_filename()
+        );
         $logo = html_writer::empty_tag('img', array('src' => $url, 'style' => 'height: 120px'));
     }
 
@@ -159,7 +169,7 @@ echo html_writer::start_tag('div', $containerattr);
 
     echo html_writer::end_tag('header');
 
-    echo html_writer::tag('br','');
+    echo html_writer::tag('br', '');
 
     // Date time and moderator list.
     echo html_writer::start_tag('div', array('class' => 'row'));
@@ -169,11 +179,11 @@ echo html_writer::start_tag('div', $containerattr);
             echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate), array('style' => ''));
 
             if (!empty($moderators)) {
-                echo html_writer::tag('div', get_string('moderator', 'block_eventpage') . ': ' . $moderators, array('style' => ''));
+                echo html_writer::tag('div', get_string('moderator', 'block_eventpage') . ': ' . $moderators);
             }
 
             if (!empty($speakers)) {
-                echo html_writer::tag('div', get_string('speaker', 'block_eventpage') . ': ' . $speakers, array('style' => ''));
+                echo html_writer::tag('div', get_string('speaker', 'block_eventpage') . ': ' . $speakers);
             }
 
         echo html_writer::end_tag('div');
@@ -182,9 +192,12 @@ echo html_writer::start_tag('div', $containerattr);
         // Right side.
         echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
 
-            echo html_writer::tag('div', get_string('time', 'block_eventpage') . ': ' . $e->starttime . ' - ' . $e->endtime, array('style' => ''));
-            echo html_writer::tag('br','');
-            echo html_writer::tag('br','');
+            echo html_writer::tag('div',
+                get_string('time', 'block_eventpage') . ': ' . $e->starttime . ' - ' . $e->endtime,
+                array('style' => '')
+            );
+            echo html_writer::tag('br', '');
+            echo html_writer::tag('br', '');
         echo html_writer::end_tag('div');
 
     echo html_writer::end_tag('div');
@@ -199,11 +212,6 @@ echo html_writer::start_tag('div', $containerattr);
                 echo html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}", array('style' => ''));
 
                 // Map.
-                if (!$emptybio) {
-                    $mapstyle = "width:500px; height:320px";
-                } else {
-                    $mapstyle = "width:960px; height:320px";
-                }
                 echo html_writer::tag('div', '', array('id' => 'map', 'style' => $mapstyle));
 
                 echo '<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCU6NUmBX-LrGMxZQro0J8RcU4Sl4w7D84&callback=initMap"></script>';
@@ -242,7 +250,7 @@ echo html_writer::start_tag('div', $containerattr);
                     echo html_writer::end_tag('div');
                 }
                 // Break space.
-                echo html_writer::tag('br','');
+                echo html_writer::tag('br', '');
 
                 if (!empty($mainspeaker)) {
                     // Moderators Bio.
@@ -300,7 +308,7 @@ echo html_writer::start_tag('div', $containerattr);
     echo html_writer::end_tag('div');
 
     // Break space.
-    echo html_writer::tag('br','');
+    echo html_writer::tag('br', '');
 
     // Access to course and description.
     echo html_writer::start_tag('div', array('class' => 'row'));
@@ -309,7 +317,7 @@ echo html_writer::start_tag('div', $containerattr);
                 new moodle_url('/course/view.php', array('id' => $e->courseid)),
                 '<center>' . get_string('registerprogram', 'block_eventpage') . '</center>', $linkcolor
             );
-            echo html_writer::tag('br','');
+            echo html_writer::tag('br', '');
             echo html_writer::tag('div', $e->description, array('style' => 'text-align: justify;'));
             echo $categorylink;
 
