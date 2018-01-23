@@ -49,9 +49,6 @@ class block_eventpage extends block_list {
         $this->content->icons = array();
         $this->content->footer = '';
 
-        // Validate is already a course event page.
-        // $exist = block_eventpage_pageexist($courseid);
-
         if (!$DB->record_exists('block_eventpage', array('courseid' => $courseid))) {
             $params = array('action' => 'add', 'courseid' => $courseid);
             $showlink = get_string('add', 'block_eventpage');
@@ -69,25 +66,6 @@ class block_eventpage extends block_list {
 
         $this->content->items[] = html_writer::link($processurl, $showlink);
         $this->content->items[] = html_writer::link(new moodle_url('/blocks/eventpage/list.php'), get_string('seeall', 'block_eventpage'));
-
-        // user/index.php expect course context, so get one if page has module context.
-        // $currentcontext = $this->page->context->get_course_context(false);
-
-        // if (!empty($this->config->text)) {
-        //     $this->content->text = $this->config->text;
-        // }
-
-        // $this->content = '';
-        // if (empty($currentcontext)) {
-        //     return $this->content;
-        // }
-        // if ($this->page->course->id == SITEID) {
-        //     $this->content->text .= "site context";
-        // }
-
-        // if (!empty($this->config->text)) {
-        //     $this->content->text .= $this->config->text;
-        // }
 
         return $this->content;
     }
@@ -107,13 +85,12 @@ class block_eventpage extends block_list {
           return true;
     }
 
-    function has_config() {return true;}
+    function has_config() {
+        return true;
+    }
 
     public function cron() {
-            mtrace( "Hey, my cron script is running" );
-
-                 // do something
-
-                      return true;
+        mtrace( "Hey, my cron script is running" );
+        return true;
     }
 }
