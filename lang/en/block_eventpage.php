@@ -66,3 +66,7 @@ $string['advance'] = 'Advance';
 $string['moderator'] = 'Moderator';
 $string['speaker'] = 'Speaker';
 $string['addneweventpage'] = 'Add New Event Page';
+$string['date'] = 'Date';
+$string['successdelete'] = 'The event page was succesfully deleted';
+$string['successsave'] = 'The event page was succesfully saved';
+$string['successupdate'] = 'The event page was succesfully updated';

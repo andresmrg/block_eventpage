@@ -75,7 +75,6 @@ $e       = block_eventpage_get_page($eventid);
 
 $PAGE->set_url('/blocks/eventpage/view.php?id=' . $e->id);
 
-
 $context   = context_course::instance($e->courseid);
 $PAGE->set_context($context);
 $contextid = block_eventpage_get_contextid($e->courseid, $context->contextlevel);
@@ -90,14 +89,19 @@ $speakerid       = $DB->get_field('role', 'id', array('shortname' => 'speaker'))
 $speakerarray    = block_eventpage_get_user_from_role($speakerid, $contextid);
 $speakers        = block_eventpage_get_role_name_list($speakerarray);
 
-// Get main moderators and speakers
+// Get main moderators and speakers.
 $mainmoderatorid     = $DB->get_field('role', 'id', array('shortname' => 'mainmoderator'));
 $mainmoderatorarray  = block_eventpage_get_user_from_role($mainmoderatorid, $contextid);
 $mainmoderator       = block_eventpage_get_single_user($mainmoderatorarray);
+$mainmoderatorname   = block_eventpage_get_role_name_list($mainmoderatorarray);
 
 $mainspeakerid       = $DB->get_field('role', 'id', array('shortname' => 'mainspeaker'));
 $mainspeakerarray    = block_eventpage_get_user_from_role($mainspeakerid, $contextid);
 $mainspeaker         = block_eventpage_get_single_user($mainspeakerarray);
+$mainspeakername     = block_eventpage_get_role_name_list($mainspeakerarray);
+
+$moderators = (empty($mainmoderatorname) ? $moderators : $mainmoderatorname . ", " . $moderators);
+$speakers = (empty($mainspeakername) ? $speakers : $mainspeakername . ", " . $speakers);
 
 $emptybio         = (empty($mainspeaker) && empty($mainmoderator)) ? true : false;
 $emptymap         = (empty($e->latitude) && empty($e->longitude)) ? true : false;
@@ -177,22 +181,21 @@ echo html_writer::start_tag('div', $containerattr);
     echo html_writer::tag('br', '');
 
     // Date time and moderator list.
-    echo html_writer::start_tag('div', array('class' => 'row'));
+    echo html_writer::start_tag('div', array('class' => 'row', 'style' => 'margin-bottom: 30px;'));
 
         // Left side.
         echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-            echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate));
+            echo html_writer::tag('div', '<b>' . get_string('date', 'block_eventpage') . ':</b> ' . date('d F Y', $e->startdate));
 
             if (!empty($moderators)) {
-                echo html_writer::tag('div', get_string('moderator', 'block_eventpage') . ': ' . $moderators);
+                echo html_writer::tag('div', "<b>" . get_string('moderator', 'block_eventpage') . ' </b>: ' . $moderators);
             }
 
             if (!empty($speakers)) {
-                echo html_writer::tag('div', get_string('speaker', 'block_eventpage') . ': ' . $speakers);
+                echo html_writer::tag('div', "<b>" . get_string('speaker', 'block_eventpage') . '</b>: ' . $speakers);
             }
 
         echo html_writer::end_tag('div');
-
 
         // Right side.
         echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
@@ -206,7 +209,6 @@ echo html_writer::start_tag('div', $containerattr);
         echo html_writer::end_tag('div');
 
     echo html_writer::end_tag('div');
-
 
     // Location and bio.
     echo html_writer::start_tag('div', array('class' => 'row'));

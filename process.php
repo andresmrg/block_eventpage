@@ -59,7 +59,7 @@ if ($action == 'del') {
     $e          = block_eventpage_get_page($eventid);
     $result     = block_eventpage_delete_record($e);
     $returnurl  = new moodle_url('/blocks/eventpage/list.php');
-    $returnmsg  = 'The event page was succesfully deleted';
+    $returnmsg  = get_string('successdelete', 'block_eventpage');
     redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_WARNING);
 }
 
@@ -127,7 +127,7 @@ if ($data = $mform->get_data()) {
 
         // Prepare URL to redirect.
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
-        $returnmsg = 'The event page was succesfully saved';
+        $returnmsg = get_string('successsave', 'block_eventpage');
 
         // Redirect to the course page.
         redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_SUCCESS);
@@ -148,7 +148,7 @@ if ($data = $mform->get_data()) {
         block_eventpage_update_record($data);
 
         $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
-        $returnmsg = 'The event page was succesfully updated';
+        $returnmsg = get_string('successupdate', 'block_eventpage');
         redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_SUCCESS);
 
     }
