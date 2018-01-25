@@ -37,8 +37,6 @@ $PAGE->set_url('/blocks/eventpage/list.php');
 $PAGE->set_pagelayout('standard');
 
 $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/jquery.js'), true);
-$PAGE->requires->js(new moodle_url('/blocks/eventpage/dist/sweetalert.min.js'), true);
-$PAGE->requires->css('/blocks/eventpage/dist/sweetalert.css');
 $PAGE->requires->js(new moodle_url('/blocks/eventpage/js/locallib.js'));
 
 $download = optional_param('download', '', PARAM_ALPHA);
