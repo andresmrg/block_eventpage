@@ -78,7 +78,7 @@ $attachmentoptions  = array(
     'maxbytes'  => $maxbytes
 );
 
-$e->descriptionformat = clean_text($e->description, FORMAT_HTML);
+$e->descriptionformat = FORMAT_HTML;
 $textfieldoptions = array(
     'subdirs' => 0,
     'maxbytes' => $maxbytes,
