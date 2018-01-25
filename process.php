@@ -56,11 +56,10 @@ $PAGE->set_context($context);
 
 // Deletion action. It redirects to the event page list.
 if ($action == 'del') {
-    $e = block_eventpage_get_page($eventid);
-    $result = block_eventpage_delete_record($e);
-
-    $returnurl = new moodle_url('/blocks/eventpage/list.php');
-    $returnmsg = 'The event page was succesfully deleted';
+    $e          = block_eventpage_get_page($eventid);
+    $result     = block_eventpage_delete_record($e);
+    $returnurl  = new moodle_url('/blocks/eventpage/list.php');
+    $returnmsg  = 'The event page was succesfully deleted';
     redirect($returnurl, $returnmsg, null, \core\output\notification::NOTIFY_WARNING);
 }
 
@@ -79,12 +78,15 @@ $attachmentoptions  = array(
     'maxbytes'  => $maxbytes
 );
 
-$textfieldoptions   = array(
-    'trusttext' => true,
-    'subdirs'   => true,
-    'maxfiles'  => 20,
-    'maxbytes'  => $maxbytes,
-    'context'   => $context
+$e->descriptionformat = clean_text($e->description, FORMAT_HTML);
+$textfieldoptions = array(
+    'subdirs' => 0,
+    'maxbytes' => $maxbytes,
+    'maxfiles' => 0,
+    'changeformat' => 0,
+    'context' => $context,
+    'noclean' => false,
+    'trusttext' => false
 );
 
 
@@ -105,9 +107,7 @@ if (isset($e) && !empty($e)) {
 
 }
 
-
 $mform->set_data($e);
-
 if ($data = $mform->get_data()) {
 
     // Content of editor.
