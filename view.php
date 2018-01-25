@@ -143,6 +143,11 @@ if ($files = $fs->get_area_files($context->id, 'block_eventpage', 'intro', 0, nu
 
 }
 
+// If $logo is not defined or empty, put an empty string.
+if (!isset($logo) || empty($logo)) {
+    $logo = "";
+}
+
 echo $OUTPUT->header();
 echo html_writer::start_tag('div', $containerattr);
     // Header.
@@ -153,12 +158,12 @@ echo html_writer::start_tag('div', $containerattr);
 
             // Logo side.
             echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
-                echo html_writer::tag('div', $logo, array('style' => ''));
+                echo html_writer::tag('div', $logo);
             echo html_writer::end_tag('div');
 
             // Language side.
             echo html_writer::start_tag('div', array('class' => 'col-sm-6', 'id' => 'languageselector'));
-                echo html_writer::tag('div', '', array('style' => ''));
+                echo html_writer::tag('div', '');
             echo html_writer::end_tag('div');
 
         echo html_writer::end_tag('div');
@@ -176,7 +181,7 @@ echo html_writer::start_tag('div', $containerattr);
 
         // Left side.
         echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-            echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate), array('style' => ''));
+            echo html_writer::tag('div', 'Date: ' . date('d F Y', $e->startdate));
 
             if (!empty($moderators)) {
                 echo html_writer::tag('div', get_string('moderator', 'block_eventpage') . ': ' . $moderators);
@@ -209,7 +214,7 @@ echo html_writer::start_tag('div', $containerattr);
         // If the map is not empty, then display the map and the main speaker and moderator.
         if (!$emptymap) {
             echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-                echo html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}", array('style' => ''));
+                echo html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}");
 
                 // Map.
                 echo html_writer::tag('div', '', array('id' => 'map', 'style' => $mapstyle));
@@ -244,8 +249,8 @@ echo html_writer::start_tag('div', $containerattr);
                         echo html_writer::end_tag('div');
 
                         echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainmoderator), array('style' => ''));
-                            echo html_writer::tag('small', $mainmoderator->description, array('style' => ''));
+                            echo html_writer::tag('div', fullname($mainmoderator));
+                            echo html_writer::tag('small', $mainmoderator->description);
                         echo html_writer::end_tag('div');
                     echo html_writer::end_tag('div');
                 }
@@ -260,8 +265,8 @@ echo html_writer::start_tag('div', $containerattr);
                         echo html_writer::end_tag('div');
 
                         echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainspeaker), array('style' => ''));
-                            echo html_writer::tag('small', $mainspeaker->description, array('style' => ''));
+                            echo html_writer::tag('div', fullname($mainspeaker));
+                            echo html_writer::tag('small', $mainspeaker->description);
                         echo html_writer::end_tag('div');
                     echo html_writer::end_tag('div');
                 }
@@ -280,8 +285,8 @@ echo html_writer::start_tag('div', $containerattr);
                         echo html_writer::end_tag('div');
 
                         echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainmoderator), array('style' => ''));
-                            echo html_writer::tag('small', $mainmoderator->description, array('style' => ''));
+                            echo html_writer::tag('div', fullname($mainmoderator));
+                            echo html_writer::tag('small', $mainmoderator->description);
                         echo html_writer::end_tag('div');
                     echo html_writer::end_tag('div');
                 echo html_writer::end_tag('div');
@@ -296,8 +301,8 @@ echo html_writer::start_tag('div', $containerattr);
                         echo html_writer::end_tag('div');
 
                         echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainspeaker), array('style' => ''));
-                            echo html_writer::tag('small', $mainspeaker->description, array('style' => ''));
+                            echo html_writer::tag('div', fullname($mainspeaker));
+                            echo html_writer::tag('small', $mainspeaker->description);
                         echo html_writer::end_tag('div');
                     echo html_writer::end_tag('div');
                 echo html_writer::end_tag('div');
