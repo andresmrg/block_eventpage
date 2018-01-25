@@ -135,7 +135,7 @@ if (isset($e->fontcolor)) {
 $fs = get_file_storage();
 if ($files = $fs->get_area_files($context->id, 'block_eventpage', 'intro', 0, null, false)) {
 
-    // Look through each file being managed
+    // Look through each file being managed.
     foreach ($files as $file) {
         $url = moodle_url::make_pluginfile_url(
             $file->get_contextid(), $file->get_component(),
@@ -152,77 +152,78 @@ if (!isset($logo) || empty($logo)) {
     $logo = "";
 }
 
-echo $OUTPUT->header();
-echo html_writer::start_tag('div', $containerattr);
+$htmlout = "";
+$htmlout .= $OUTPUT->header();
+$htmlout .= html_writer::start_tag('div', $containerattr);
     // Header.
-    echo html_writer::start_tag('header');
+    $htmlout .= html_writer::start_tag('header');
 
         // Logo and language.
-        echo html_writer::start_tag('div', array('class' => 'row'));
+        $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
 
             // Logo side.
-            echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
-                echo html_writer::tag('div', $logo);
-            echo html_writer::end_tag('div');
+            $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                $htmlout .= html_writer::tag('div', $logo);
+            $htmlout .= html_writer::end_tag('div');
 
             // Language side.
-            echo html_writer::start_tag('div', array('class' => 'col-sm-6', 'id' => 'languageselector'));
-                echo html_writer::tag('div', '');
-            echo html_writer::end_tag('div');
+            $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-6', 'id' => 'languageselector'));
+                $htmlout .= html_writer::tag('div', '');
+            $htmlout .= html_writer::end_tag('div');
 
-        echo html_writer::end_tag('div');
+        $htmlout .= html_writer::end_tag('div');
 
-        echo html_writer::start_tag('div');
-            echo html_writer::tag('h1', $e->name, array('style' => 'text-align: center; padding: 20px;'));
-        echo html_writer::end_tag('div');
+        $htmlout .= html_writer::start_tag('div');
+            $htmlout .= html_writer::tag('h1', $e->name, array('style' => 'text-align: center; padding: 20px;'));
+        $htmlout .= html_writer::end_tag('div');
 
-    echo html_writer::end_tag('header');
+    $htmlout .= html_writer::end_tag('header');
 
-    echo html_writer::tag('br', '');
+    $htmlout .= html_writer::tag('br', '');
 
     // Date time and moderator list.
-    echo html_writer::start_tag('div', array('class' => 'row', 'style' => 'margin-bottom: 30px;'));
+    $htmlout .= html_writer::start_tag('div', array('class' => 'row', 'style' => 'margin-bottom: 30px;'));
 
         // Left side.
-        echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-            echo html_writer::tag('div', '<b>' . get_string('date', 'block_eventpage') . ':</b> ' . date('d F Y', $e->startdate));
+        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-7'));
+            $htmlout .= html_writer::tag('div', '<b>' . get_string('date', 'block_eventpage') . ':</b> ' . date('d F Y', $e->startdate));
 
             if (!empty($moderators)) {
-                echo html_writer::tag('div', "<b>" . get_string('moderator', 'block_eventpage') . ' </b>: ' . $moderators);
+                $htmlout .= html_writer::tag('div', "<b>" . get_string('moderator', 'block_eventpage') . ' </b>: ' . $moderators);
             }
 
             if (!empty($speakers)) {
-                echo html_writer::tag('div', "<b>" . get_string('speaker', 'block_eventpage') . '</b>: ' . $speakers);
+                $htmlout .= html_writer::tag('div', "<b>" . get_string('speaker', 'block_eventpage') . '</b>: ' . $speakers);
             }
 
-        echo html_writer::end_tag('div');
+        $htmlout .= html_writer::end_tag('div');
 
         // Right side.
-        echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
+        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-5'));
 
-            echo html_writer::tag('div',
+            $htmlout .= html_writer::tag('div',
                 get_string('time', 'block_eventpage') . ': ' . $e->starttime . ' - ' . $e->endtime,
                 array('style' => '')
             );
-            echo html_writer::tag('br', '');
-            echo html_writer::tag('br', '');
-        echo html_writer::end_tag('div');
+            $htmlout .= html_writer::tag('br', '');
+            $htmlout .= html_writer::tag('br', '');
+        $htmlout .= html_writer::end_tag('div');
 
-    echo html_writer::end_tag('div');
+    $htmlout .= html_writer::end_tag('div');
 
     // Location and bio.
-    echo html_writer::start_tag('div', array('class' => 'row'));
+    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
 
         // If the map is not empty, then display the map and the main speaker and moderator.
         if (!$emptymap) {
-            echo html_writer::start_tag('div', array('class' => 'col-sm-7'));
-                echo html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}");
+            $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-7'));
+                $htmlout .= html_writer::tag('div', get_string('location', 'block_eventpage') . ": {$e->city}, {$e->street}, {$e->other}");
 
                 // Map.
-                echo html_writer::tag('div', '', array('id' => 'map', 'style' => $mapstyle));
+                $htmlout .= html_writer::tag('div', '', array('id' => 'map', 'style' => $mapstyle));
 
-                echo '<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCU6NUmBX-LrGMxZQro0J8RcU4Sl4w7D84&callback=initMap"></script>';
-                echo html_writer::tag(
+                $htmlout .= '<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCU6NUmBX-LrGMxZQro0J8RcU4Sl4w7D84&callback=initMap"></script>';
+                $htmlout .= html_writer::tag(
                     'script',
                     '
                     $(\'#page\').css(\'margin-top\', \'0px\');
@@ -238,97 +239,99 @@ echo html_writer::start_tag('div', $containerattr);
                         });
                     }'
                 );
-            echo html_writer::end_tag('div');
+            $htmlout .= html_writer::end_tag('div');
 
               // Right side.
-            echo html_writer::start_tag('div', array('class' => 'col-sm-5'));
+            $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-5'));
 
                 if (!empty($mainmoderator)) {
                     // Moderators Bio.
-                    echo html_writer::start_tag('div', array('class' => 'row'));
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
-                            echo $OUTPUT->user_picture($mainmoderator, array('size' => 120));
-                        echo html_writer::end_tag('div');
+                    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            $htmlout .= $OUTPUT->user_picture($mainmoderator, array('size' => 120));
+                        $htmlout .= html_writer::end_tag('div');
 
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainmoderator));
-                            echo html_writer::tag('small', $mainmoderator->description);
-                        echo html_writer::end_tag('div');
-                    echo html_writer::end_tag('div');
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            $htmlout .= html_writer::tag('div', fullname($mainmoderator));
+                            $htmlout .= html_writer::tag('small', $mainmoderator->description);
+                        $htmlout .= html_writer::end_tag('div');
+                    $htmlout .= html_writer::end_tag('div');
                 }
                 // Break space.
-                echo html_writer::tag('br', '');
+                $htmlout .= html_writer::tag('br', '');
 
                 if (!empty($mainspeaker)) {
                     // Moderators Bio.
-                    echo html_writer::start_tag('div', array('class' => 'row'));
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
-                            echo $OUTPUT->user_picture($mainspeaker, array('size' => 120));
-                        echo html_writer::end_tag('div');
+                    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            $htmlout .= $OUTPUT->user_picture($mainspeaker, array('size' => 120));
+                        $htmlout .= html_writer::end_tag('div');
 
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainspeaker));
-                            echo html_writer::tag('small', $mainspeaker->description);
-                        echo html_writer::end_tag('div');
-                    echo html_writer::end_tag('div');
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            $htmlout .= html_writer::tag('div', fullname($mainspeaker));
+                            $htmlout .= html_writer::tag('small', $mainspeaker->description);
+                        $htmlout .= html_writer::end_tag('div');
+                    $htmlout .= html_writer::end_tag('div');
                 }
 
-            echo html_writer::end_tag('div');
+            $htmlout .= html_writer::end_tag('div');
 
         } else {
 
             // ... Display in the whole page main speaker and moderator.
             if (!empty($mainmoderator)) {
-                echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-6'));
                     // Moderators Bio.
-                    echo html_writer::start_tag('div', array('class' => 'row'));
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
-                            echo $OUTPUT->user_picture($mainmoderator, array('size' => 120));
-                        echo html_writer::end_tag('div');
+                    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            $htmlout .= $OUTPUT->user_picture($mainmoderator, array('size' => 120));
+                        $htmlout .= html_writer::end_tag('div');
 
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainmoderator));
-                            echo html_writer::tag('small', $mainmoderator->description);
-                        echo html_writer::end_tag('div');
-                    echo html_writer::end_tag('div');
-                echo html_writer::end_tag('div');
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            $htmlout .= html_writer::tag('div', fullname($mainmoderator));
+                            $htmlout .= html_writer::tag('small', $mainmoderator->description);
+                        $htmlout .= html_writer::end_tag('div');
+                    $htmlout .= html_writer::end_tag('div');
+                $htmlout .= html_writer::end_tag('div');
             }
 
             if (!empty($mainspeaker)) {
-                echo html_writer::start_tag('div', array('class' => 'col-sm-6'));
+                $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-6'));
                     // Moderators Bio.
-                    echo html_writer::start_tag('div', array('class' => 'row'));
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-4'));
-                            echo $OUTPUT->user_picture($mainspeaker, array('size' => 120));
-                        echo html_writer::end_tag('div');
+                    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-4'));
+                            $htmlout .= $OUTPUT->user_picture($mainspeaker, array('size' => 120));
+                        $htmlout .= html_writer::end_tag('div');
 
-                        echo html_writer::start_tag('div', array('class' => 'col-sm-8'));
-                            echo html_writer::tag('div', fullname($mainspeaker));
-                            echo html_writer::tag('small', $mainspeaker->description);
-                        echo html_writer::end_tag('div');
-                    echo html_writer::end_tag('div');
-                echo html_writer::end_tag('div');
+                        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-8'));
+                            $htmlout .= html_writer::tag('div', fullname($mainspeaker));
+                            $htmlout .= html_writer::tag('small', $mainspeaker->description);
+                        $htmlout .= html_writer::end_tag('div');
+                    $htmlout .= html_writer::end_tag('div');
+                $htmlout .= html_writer::end_tag('div');
             }
 
         }
 
-    echo html_writer::end_tag('div');
+    $htmlout .= html_writer::end_tag('div');
 
     // Break space.
-    echo html_writer::tag('br', '');
+    $htmlout .= html_writer::tag('br', '');
 
     // Access to course and description.
-    echo html_writer::start_tag('div', array('class' => 'row'));
-        echo html_writer::start_tag('div', array('class' => 'col-sm-12'));
-            echo html_writer::link(
+    $htmlout .= html_writer::start_tag('div', array('class' => 'row'));
+        $htmlout .= html_writer::start_tag('div', array('class' => 'col-sm-12'));
+            $htmlout .= html_writer::link(
                 new moodle_url('/course/view.php', array('id' => $e->courseid)),
                 '<center>' . get_string('registerprogram', 'block_eventpage') . '</center>', $linkcolor
             );
-            echo html_writer::tag('br', '');
-            echo html_writer::tag('div', $e->description, array('style' => 'text-align: justify;'));
-            echo $categorylink;
+            $htmlout .= html_writer::tag('br', '');
+            $htmlout .= html_writer::tag('div', $e->description, array('style' => 'text-align: justify;'));
+            $htmlout .= $categorylink;
 
-        echo html_writer::end_tag('div');
-    echo html_writer::end_tag('div');
-echo html_writer::end_tag('div');
-echo $OUTPUT->footer();
+        $htmlout .= html_writer::end_tag('div');
+    $htmlout .= html_writer::end_tag('div');
+$htmlout .= html_writer::end_tag('div');
+$htmlout .= $OUTPUT->footer();
+
+echo $htmlout;
