@@ -206,13 +206,20 @@ function block_eventpage_get_contextid($courseid, $level) {
 function block_eventpage_get_course_category($courseid, $linkcolor) {
     global $DB;
 
-    $categoryid = $DB->get_field('course', 'category', array('id' => $courseid));
+    $categoryid     = $DB->get_field('course', 'category', array('id' => $courseid));
     $parentcategory = $DB->get_field('course_categories', 'parent', array('id' => $categoryid));
+    $categoryname   = $DB->get_field('course_categories', 'name', array('id' => $parentcategory));
 
     $result = '';
     if (!empty($parentcategory)) {
-        $url = new moodle_url('/course/index.php', array('categoryid' => $parentcategory));
-        $result = html_writer::link($url, '<center>' . get_string('explorearea', 'block_eventpage') . '</center>', $linkcolor);
+
+        $url = new moodle_url('/course/index.php', array('categoryid' => $categoryid));
+        $result = html_writer::link(
+            $url,
+            '<center>' . get_string('explorearea', 'block_eventpage', $categoryname) . '</center>',
+            $linkcolor
+        );
+
     }
 
     return $result;
