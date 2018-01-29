@@ -78,7 +78,6 @@ $attachmentoptions  = array(
     'maxbytes'  => $maxbytes
 );
 
-$e->descriptionformat = FORMAT_HTML;
 $textfieldoptions = array(
     'subdirs' => 0,
     'maxbytes' => $maxbytes,
@@ -89,7 +88,6 @@ $textfieldoptions = array(
     'trusttext' => false
 );
 
-
 $mform = new process_form(
     null,
     array('attachmentoptions' => $attachmentoptions, 'textfieldoptions' => $textfieldoptions)
@@ -97,6 +95,9 @@ $mform = new process_form(
 
 // Could also use $CFG->maxbytes if you are not coding within a course context.
 if (isset($e) && !empty($e)) {
+
+    $e->descriptionformat = FORMAT_HTML;
+
     $attachment = file_prepare_standard_filemanager(
         $e, 'logopath', $attachmentoptions, $context, 'block_eventpage', 'intro', 0
     );
