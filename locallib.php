@@ -216,7 +216,7 @@ function block_eventpage_get_course_category($courseid, $linkcolor) {
         $url = new moodle_url('/course/index.php', array('categoryid' => $categoryid));
         $result = html_writer::link(
             $url,
-            '<center>' . get_string('explorearea', 'block_eventpage', $categoryname) . '</center>',
+            '<center>' . format_string(get_string('explorearea', 'block_eventpage', $categoryname)) . '</center>',
             $linkcolor
         );
 
